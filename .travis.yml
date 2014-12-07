@@ -1,7 +1,7 @@
 language: cpp
 script:
   - teapot -c travis fetch
-  - teapot -c travis build Test/Dream
+  - teapot -c travis build Test/DreamEvents
 compiler: clang
 install:
 # libstdc++-4.8-dev
