@@ -146,7 +146,7 @@ namespace Dream
 // MARK: -
 // MARK: class FileDescriptorSource
 
-		FileDescriptorSource::FileDescriptorSource (CallbackT callback, FileDescriptorT file_descriptor) : _file_descriptor(file_descriptor), _callback(callback)
+		FileDescriptorSource::FileDescriptorSource (CallbackT callback, FileDescriptorT file_descriptor, Event mask) : _file_descriptor(file_descriptor), _callback(callback), _mask(mask)
 		{
 		}
 

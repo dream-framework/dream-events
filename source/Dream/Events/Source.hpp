@@ -78,6 +78,7 @@ namespace Dream
 		class IFileDescriptorSource : virtual public ISource {
 		public:
 			virtual FileDescriptorT file_descriptor () const = 0;
+			virtual Event mask() const = 0;
 
 			/// Helper functions
 			void set_will_block (bool value);
@@ -92,9 +93,10 @@ namespace Dream
 		protected:
 			FileDescriptorT _file_descriptor;
 			CallbackT _callback;
+			Event _mask;
 
 		public:
-			FileDescriptorSource(CallbackT callback, FileDescriptorT fd);
+			FileDescriptorSource(CallbackT callback, FileDescriptorT fd, Event mask);
 			virtual ~FileDescriptorSource ();
 
 			virtual FileDescriptorT file_descriptor () const;
