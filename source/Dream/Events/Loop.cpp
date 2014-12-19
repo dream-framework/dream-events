@@ -108,6 +108,8 @@ namespace Dream
 
 		void KQueueFileDescriptorMonitor::add_source (Ptr<IFileDescriptorSource> source)
 		{
+			SystemError::reset();
+
 			FileDescriptorT fd = source->file_descriptor();
 			_file_descriptor_handles.insert(source);
 
@@ -125,17 +127,19 @@ namespace Dream
 			int result = kevent(_kqueue, change, c, NULL, 0, NULL);
 
 			if (result == -1) {
-				logger()->system_error(__func__);
+				SystemError::check("kevent()");
 			}
 		}
 
-		int KQueueFileDescriptorMonitor::source_count () const
+		std::size_t KQueueFileDescriptorMonitor::source_count () const
 		{
 			return _file_descriptor_handles.size();
 		}
 
 		void KQueueFileDescriptorMonitor::remove_source (Ptr<IFileDescriptorSource> source)
 		{
+			SystemError::reset();
+
 			FileDescriptorT fd = source->file_descriptor();
 
 			struct kevent change[2];
@@ -151,15 +155,18 @@ namespace Dream
 
 			int result = kevent(_kqueue, change, c, NULL, 0, NULL);
 
-			if (result == -1)
-				logger()->system_error(__func__);
+			if (result == -1) {
+				SystemError::check("kevent()");
+			}
 
 			_removed_file_descriptors.insert(fd);
 			_file_descriptor_handles.erase(source);
 		}
 
-		int KQueueFileDescriptorMonitor::wait_for_events (TimeT timeout, Loop * loop)
+		std::size_t KQueueFileDescriptorMonitor::wait_for_events (TimeT timeout, Loop * loop)
 		{
+			SystemError::reset();
+
 			const unsigned KQUEUE_SIZE = 32;
 			int count;
 
@@ -182,7 +189,7 @@ namespace Dream
 				count = kevent(_kqueue, NULL, 0, events, KQUEUE_SIZE, &kevent_timeout);
 
 			if (count == -1) {
-				logger()->system_error(__func__);
+				SystemError::check("kevent()");
 			} else {
 				for (unsigned i = 0; i < count; i += 1) {
 					//std::cerr << this << " event[" << i << "] for fd: " << events[i].ident << " filter: " << events[i].filter << std::endl;
@@ -194,7 +201,7 @@ namespace Dream
 					IFileDescriptorSource * s = (IFileDescriptorSource *)events[i].udata;
 
 					if (events[i].flags & EV_ERROR) {
-						log_error("Error processing fd: ", s->file_descriptor()));
+						log_error("Error processing fd:", s->file_descriptor());
 					}
 
 					try {
