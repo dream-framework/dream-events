@@ -7,14 +7,13 @@
 //
 //
 
-#ifndef _DREAM_NETWORK_NETWORK_H
-#define _DREAM_NETWORK_NETWORK_H
+#pragma once
 
-#include "../Framework.h"
+#include "../Framework.hpp"
 
-#include "../Core/Endian.h"
-#include "../Core/Data.h"
-#include "../Events/Loop.h"
+#include "../Core/Endian.hpp"
+#include "../Core/Data.hpp"
+#include "../Events/Loop.hpp"
 
 #include <exception>
 #include <stdexcept>
@@ -54,5 +53,3 @@ namespace Dream {
 		};
 	}
 }
-
-#endif

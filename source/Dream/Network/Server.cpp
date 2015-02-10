@@ -7,10 +7,10 @@
 //
 //
 
-#include "Server.h"
+#include "Server.hpp"
 
-#include "../Core/Timer.h"
-#include "../Events/Loop.h"
+#include "../Core/Timer.hpp"
+#include "../Events/Loop.hpp"
 
 namespace Dream {
 	namespace Network {

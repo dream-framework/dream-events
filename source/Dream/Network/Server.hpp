@@ -7,12 +7,11 @@
 //
 //
 
-#ifndef _DREAM_NETWORK_SERVER_H
-#define _DREAM_NETWORK_SERVER_H
+#pragma once
 
-#include "Socket.h"
+#include "Socket.hpp"
 
-#include "../Events/Loop.h"
+#include "../Events/Loop.hpp"
 
 // Threading is often needed for coordinating network servers and clients
 // But- a multi-threaded server model (one thread per client) is not advised.
@@ -95,5 +94,3 @@ namespace Dream {
 		};
 	}
 }
-
-#endif

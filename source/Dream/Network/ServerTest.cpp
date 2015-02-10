@@ -7,9 +7,9 @@
 //
 //
 
-#include "Network.h"
-#include "Message.h"
-#include "Server.h"
+#include "Network.hpp"
+#include "Message.hpp"
+#include "Server.hpp"
 
 #include <functional>
 

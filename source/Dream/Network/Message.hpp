@@ -7,12 +7,11 @@
 //
 //
 
-#ifndef _DREAM_NETWORK_MESSAGE_H
-#define _DREAM_NETWORK_MESSAGE_H
+#pragma once
 
-#include "Socket.h"
-#include "../Core/Endian.h"
-#include "../Core/Buffer.h"
+#include "Socket.hpp"
+#include "../Core/Endian.hpp"
+#include "../Core/Buffer.hpp"
 
 #include <queue>
 
@@ -205,5 +204,3 @@ namespace Dream {
 		};
 	}
 }
-
-#endif

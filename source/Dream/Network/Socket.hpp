@@ -7,12 +7,11 @@
 //
 //
 
-#ifndef _DREAM_NETWORK_SOCKET_H
-#define _DREAM_NETWORK_SOCKET_H
+#pragma once
 
-#include "Address.h"
-#include "../Core/Buffer.h"
-#include "../Events/Source.h"
+#include "Address.hpp"
+#include "../Core/Buffer.hpp"
+#include "../Events/Source.hpp"
 
 namespace Dream {
 	namespace Network {
@@ -147,5 +146,3 @@ namespace Dream {
 		};
 	}
 }
-
-#endif

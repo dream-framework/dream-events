@@ -9,9 +9,9 @@
 
 #pragma once
 
-#include "Network.h"
-#include "../Core/Strings.h"
-#include "../Core/URI.h"
+#include "Network.hpp"
+#include "../Core/Strings.hpp"
+#include "../Core/URI.hpp"
 
 #include <vector>
 

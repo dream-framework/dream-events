@@ -7,11 +7,11 @@
 //
 //
 
-#include "Socket.h"
+#include "Socket.hpp"
 
-#include "../Events/Loop.h"
-#include "../Events/Thread.h"
-#include "../Events/Logger.h"
+#include "../Events/Loop.hpp"
+#include "../Events/Thread.hpp"
+#include "../Events/Logger.hpp"
 
 #include <fcntl.h>
 #include <sys/types.h>
