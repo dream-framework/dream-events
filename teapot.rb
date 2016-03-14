@@ -40,8 +40,8 @@ define_target "dream-events-tests" do |target|
 	target.provides "Test/DreamEvents"
 end
 
-define_configuration "travis" do |configuration|
-	configuration[:source] = "http://github.com/dream-framework/"
+define_configuration "test" do |configuration|
+	configuration[:source] = "https://github.com/kurocha"
 	
 	configuration.require "platforms"
 	configuration.require "build-files"
