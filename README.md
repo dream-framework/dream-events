@@ -2,11 +2,11 @@
 
 Dream Events provides light weight event processing for file descriptors and cross-thread notifications.
 
-[![Build Status](https://travis-ci.org/dream-framework/dream-events.svg?branch=master)](https://travis-ci.org/dream-framework/dream-events)
+[![Build Status](https://travis-ci.org/kurocha/dream-events.svg?branch=master)](https://travis-ci.org/kurocha/dream-events)
 
 ## Installation
 
-The dream framework is assembled using [teapot](http://www.kyusu.org) which simplifies cross-platform development and deployment. Please see [dream](https://github.com/dream-framework/dream) for more details about how to use this package.
+The dream framework is assembled using [teapot](http://www.teapot.nz) which simplifies cross-platform development and deployment. Please see [Dream](https://github.com/kurocha/dream) for more details about how to use this package.
 
 ## Contributing
 
