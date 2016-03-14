@@ -1,7 +1,7 @@
 language: cpp
 script:
   - teapot -c test fetch
-  - teapot -c test build Test/Dream
+  - teapot -c test build Test/DreamEvents
 compiler: clang
 install:
 # libstdc++-4.8-dev
