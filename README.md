@@ -6,7 +6,7 @@ Dream Events provides light weight event processing for file descriptors and cro
 
 ## Installation
 
-The dream framework is assembled using [teapot](http://www.teapot.nz) which simplifies cross-platform development and deployment. Please see [Dream](https://github.com/kurocha/dream) for more details about how to use this package.
+The dream framework is assembled using [Teapot](http://www.teapot.nz) which simplifies cross-platform development and deployment. Please see [Dream](https://github.com/kurocha/dream) for more details about how to use this package.
 
 ## Contributing
 
