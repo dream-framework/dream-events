@@ -24,7 +24,7 @@ namespace Dream
 					
 					int notification_count = 0;
 					
-					// This notification will be executed on the main thread.
+					// This notification will be executed on the main thread:
 					auto notification = ref(new NotificationSource([&](Loop *, NotificationSource *, Event){
 						notification_count += 1;
 						
@@ -36,12 +36,12 @@ namespace Dream
 					std::thread notification_thread([&](){
 						for (int i = 0; i < 10; i += 1) {
 							Core::sleep(0.01);
-							// If you don't mark a notification as urgent, it won't wake up the event loop until some other event occurs.
+							// If you don't mark a notification as urgent, it won't wake up the event loop until some other event occurs:
 							event_loop->post_notification(notification, true);
 						}
 					});
 
-					// An event loop which exists for a specfic timeframe shouldn't exit because it doesn't have anything to do.
+					// An event loop which exists for a specfic timeframe shouldn't exit because it doesn't have anything to do:
 					event_loop->set_stop_when_idle(false);
 					event_loop->run_until_timeout(1.0);
 
