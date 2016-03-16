@@ -209,12 +209,14 @@ namespace Dream
 
 		void NotificationPipeSource::process_events (Loop * loop, Event event)
 		{
-			char buf[32];
+			const std::size_t COUNT = 32;
+			
+			char buffer[COUNT];
 
-			// Discard all notification bytes
-			read(_file_descriptors[0], &buf, 32);
+			// Discard all notification bytes:
+			read(_file_descriptors[0], &buffer, COUNT);
 
-			// Process urgent notifications
+			// Process urgent notifications:
 			loop->process_notifications();
 		}
 	}
