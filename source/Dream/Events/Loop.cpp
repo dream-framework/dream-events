@@ -20,10 +20,10 @@
 #include <unistd.h>
 
 #if defined(TARGET_OS_LINUX)
-// PollFileDescriptorMonitor
+// PollMonitor
 	#include <poll.h>
 #elif defined(TARGET_OS_MAC)
-// KQueueFileDescriptorMonitor
+// KQueueMonitor
 	#include <sys/types.h>
 	#include <sys/event.h>
 	#include <sys/time.h>
@@ -77,7 +77,7 @@ namespace Dream
 		typedef std::set<Ref<IFileDescriptorSource>> FileDescriptorHandlesT;
 
 #if defined(TARGET_OS_MAC)
-		class KQueueFileDescriptorMonitor : public Object, virtual public IFileDescriptorMonitor {
+		class KQueueMonitor : public Object, virtual public IMonitor {
 		protected:
 			FileDescriptorT _kqueue;
 			std::set<FileDescriptorT> _removed_file_descriptors;
@@ -85,8 +85,8 @@ namespace Dream
 			FileDescriptorHandlesT _file_descriptor_handles;
 
 		public:
-			KQueueFileDescriptorMonitor ();
-			virtual ~KQueueFileDescriptorMonitor ();
+			KQueueMonitor ();
+			virtual ~KQueueMonitor ();
 
 			virtual void add_source (Ptr<IFileDescriptorSource> source);
 			virtual void remove_source (Ptr<IFileDescriptorSource> source);
@@ -96,17 +96,17 @@ namespace Dream
 			virtual std::size_t wait_for_events (TimeT timeout, Loop * loop);
 		};
 
-		KQueueFileDescriptorMonitor::KQueueFileDescriptorMonitor ()
+		KQueueMonitor::KQueueMonitor ()
 		{
 			_kqueue = kqueue();
 		}
 
-		KQueueFileDescriptorMonitor::~KQueueFileDescriptorMonitor ()
+		KQueueMonitor::~KQueueMonitor ()
 		{
 			close(_kqueue);
 		}
 
-		void KQueueFileDescriptorMonitor::add_source (Ptr<IFileDescriptorSource> source)
+		void KQueueMonitor::add_source (Ptr<IFileDescriptorSource> source)
 		{
 			SystemError::reset();
 
@@ -131,12 +131,12 @@ namespace Dream
 			}
 		}
 
-		std::size_t KQueueFileDescriptorMonitor::source_count () const
+		std::size_t KQueueMonitor::source_count () const
 		{
 			return _file_descriptor_handles.size();
 		}
 
-		void KQueueFileDescriptorMonitor::remove_source (Ptr<IFileDescriptorSource> source)
+		void KQueueMonitor::remove_source (Ptr<IFileDescriptorSource> source)
 		{
 			SystemError::reset();
 
@@ -163,7 +163,7 @@ namespace Dream
 			_file_descriptor_handles.erase(source);
 		}
 
-		std::size_t KQueueFileDescriptorMonitor::wait_for_events (TimeT timeout, Loop * loop)
+		std::size_t KQueueMonitor::wait_for_events (TimeT timeout, Loop * loop)
 		{
 			SystemError::reset();
 
@@ -224,13 +224,13 @@ namespace Dream
 			return count;
 		}
 
-		typedef KQueueFileDescriptorMonitor SystemFileDescriptorMonitor;
+		typedef KQueueMonitor SystemMonitor;
 #endif
 
 // MARK: -
 
 #if defined(TARGET_OS_LINUX)
-		class PollFileDescriptorMonitor : public Object, virtual public IFileDescriptorMonitor {
+		class PollMonitor : public Object, virtual public IMonitor {
 		protected:
 			// Used to provide O(1) delete time within process_events handler
 			bool _delete_current_file_descriptor_handle;
@@ -239,8 +239,8 @@ namespace Dream
 			FileDescriptorHandlesT _file_descriptor_handles;
 
 		public:
-			PollFileDescriptorMonitor ();
-			virtual ~PollFileDescriptorMonitor ();
+			PollMonitor ();
+			virtual ~PollMonitor ();
 
 			virtual void add_source (Ptr<IFileDescriptorSource> source);
 			virtual void remove_source (Ptr<IFileDescriptorSource> source);
@@ -250,20 +250,20 @@ namespace Dream
 			virtual std::size_t wait_for_events (TimeT timeout, Loop * loop);
 		};
 
-		PollFileDescriptorMonitor::PollFileDescriptorMonitor ()
+		PollMonitor::PollMonitor ()
 		{
 		}
 
-		PollFileDescriptorMonitor::~PollFileDescriptorMonitor ()
+		PollMonitor::~PollMonitor ()
 		{
 		}
 
-		void PollFileDescriptorMonitor::add_source (Ptr<IFileDescriptorSource> source)
+		void PollMonitor::add_source (Ptr<IFileDescriptorSource> source)
 		{
 			_file_descriptor_handles.insert(source);
 		}
 
-		void PollFileDescriptorMonitor::remove_source (Ptr<IFileDescriptorSource> source)
+		void PollMonitor::remove_source (Ptr<IFileDescriptorSource> source)
 		{
 			if (_current_file_descriptor_source == source) {
 				_delete_current_file_descriptor_handle = true;
@@ -272,12 +272,12 @@ namespace Dream
 			}
 		}
 
-		std::size_t PollFileDescriptorMonitor::source_count () const
+		std::size_t PollMonitor::source_count () const
 		{
 			return _file_descriptor_handles.size();
 		}
 
-		std::size_t PollFileDescriptorMonitor::wait_for_events (TimeT timeout, Loop * loop)
+		std::size_t PollMonitor::wait_for_events (TimeT timeout, Loop * loop)
 		{
 			SystemError::reset();
 			
@@ -362,7 +362,7 @@ namespace Dream
 			return count;
 		}
 
-		typedef PollFileDescriptorMonitor SystemFileDescriptorMonitor;
+		typedef PollMonitor SystemMonitor;
 #endif
 
 // MARK: -
@@ -371,7 +371,7 @@ namespace Dream
 		Loop::Loop () : _stop_when_idle(true), _rate_limit(20)
 		{
 			// Setup file descriptor monitor
-			_file_descriptor_monitor = new SystemFileDescriptorMonitor;
+			_monitor = new SystemMonitor;
 
 			// Setup timers
 			_stopwatch.start();
@@ -484,7 +484,7 @@ namespace Dream
 			//std::cerr << this << " monitoring fd: " << fd << std::endl;
 			//IFileDescriptorSource::debug_file_descriptor_flags(fd);
 
-			_file_descriptor_monitor->add_source(source);
+			_monitor->add_source(source);
 		}
 
 		void Loop::stop_monitoring_file_descriptor (Ptr<IFileDescriptorSource> source)
@@ -495,7 +495,7 @@ namespace Dream
 
 			//IFileDescriptorSource::debug_file_descriptor_flags(fd);
 
-			_file_descriptor_monitor->remove_source(source);
+			_monitor->remove_source(source);
 		}
 
 		/// If there is a timeout, returns true and the timeout in `at_time`.
@@ -621,8 +621,8 @@ namespace Dream
 			if (DEBUG) log_debug("process_file_descriptors timeout:", timeout);
 
 			// Timeout is now the amount of time we have to process other events until another timeout will need to fire.
-			if (_file_descriptor_monitor->source_count())
-				_file_descriptor_monitor->wait_for_events(timeout, this);
+			if (_monitor->source_count())
+				_monitor->wait_for_events(timeout, this);
 			else if (timeout > 0.0)
 				Core::sleep(timeout);
 		}
@@ -637,7 +637,7 @@ namespace Dream
 			process_notifications();
 
 			// We have 1 "hidden" source: _urgent_notification_pipe..
-			if (_stop_when_idle && _file_descriptor_monitor->source_count() == 1 && _timer_handles.size() == 0)
+			if (_stop_when_idle && _monitor->source_count() == 1 && _timer_handles.size() == 0)
 				stop();
 
 			// A timer may have stopped the runloop. We should check here before we possibly block indefinitely.

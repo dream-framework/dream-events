@@ -1,5 +1,5 @@
 //
-//  FileDescriptorMonitor.hpp
+//  Monitor.hpp
 //  File file is part of the "Dream" project and released under the MIT License.
 //
 //  Created by Samuel Williams on 8/12/2014.
@@ -22,10 +22,10 @@ namespace Dream
 		};
 
 		/// An interface for various operating system level event-handling mechanisms, e.g. kqueue, poll.
-		class IFileDescriptorMonitor : virtual public IObject {
+		class IMonitor : virtual public IObject {
 		public:
-			IFileDescriptorMonitor();
-			virtual ~IFileDescriptorMonitor();
+			IMonitor();
+			virtual ~IMonitor();
 			
 			/// Remove a source to be monitored
 			virtual void add_source (Ptr<IFileDescriptorSource> source) = 0;

@@ -11,7 +11,7 @@
 
 #include "Events.hpp"
 #include "Source.hpp"
-#include "FileDescriptorMonitor.hpp"
+#include "Monitor.hpp"
 
 #include <set>
 #include <queue>
@@ -42,7 +42,7 @@ namespace Dream
 		*/
 		class Loop : public Object {
 		private:
-			Ref<IFileDescriptorMonitor> _file_descriptor_monitor;
+			Ref<IMonitor> _monitor;
 
 			friend class NotificationPipeSource;
 			Ref<NotificationPipeSource> _urgent_notification_pipe;
@@ -86,7 +86,7 @@ namespace Dream
 			/// @returns -1 if there are no further timeouts
 			TimeT process_timers ();
 
-			/// Process any file descriptors and their events. Timeout supplied as per IFileDescriptorMonitor::wait_for_events()
+			/// Process any file descriptors and their events. Timeout supplied as per IMonitor::wait_for_events()
 			void process_file_descriptors (TimeT timeout);
 
 			Stopwatch _stopwatch;
@@ -102,7 +102,7 @@ namespace Dream
 			/// Runs one iteration of the loop.
 			/// If user_timer_timeout is true, then the timeout is set to the value returned by process_timers() otherwise, the timeout supplied is used.
 			/// @sa run_until_timeout()
-			/// @sa IFileDescriptorMonitor::wait_for_events
+			/// @sa IMonitor::wait_for_events
 			void run_one_iteration (bool use_timer_timeout, TimeT timeout = 0);
 		public:
 			/// Set whether once there are no longer IO or Timer sources, the runloop will stop automatically.
