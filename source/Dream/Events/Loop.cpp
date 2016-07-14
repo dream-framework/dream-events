@@ -79,8 +79,8 @@ namespace Dream
 #if defined(TARGET_OS_MAC)
 		class KQueueMonitor : public Object, virtual public IMonitor {
 		protected:
-			FileDescriptorT _kqueue;
-			std::set<FileDescriptorT> _removed_file_descriptors;
+			FileDescriptor _kqueue;
+			std::set<FileDescriptor> _removed_file_descriptors;
 
 			FileDescriptorHandlesT _file_descriptor_handles;
 
@@ -110,7 +110,7 @@ namespace Dream
 		{
 			SystemError::reset();
 
-			FileDescriptorT fd = source->file_descriptor();
+			FileDescriptor fd = source->file_descriptor();
 			_file_descriptor_handles.insert(source);
 
 			int mode = events_for_file_descriptor(fd);
@@ -140,7 +140,7 @@ namespace Dream
 		{
 			SystemError::reset();
 
-			FileDescriptorT fd = source->file_descriptor();
+			FileDescriptor fd = source->file_descriptor();
 
 			struct kevent change[2];
 			int c = 0;

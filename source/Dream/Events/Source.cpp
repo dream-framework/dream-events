@@ -129,7 +129,7 @@ namespace Dream
 
 		void IFileDescriptorSource::set_will_block (bool value)
 		{
-			FileDescriptorT curfd = file_descriptor();
+			FileDescriptor curfd = file_descriptor();
 
 			if (value == false) {
 				fcntl(curfd, F_SETFL, fcntl(curfd, F_GETFL) | O_NONBLOCK);
@@ -146,7 +146,7 @@ namespace Dream
 // MARK: -
 // MARK: class FileDescriptorSource
 
-		FileDescriptorSource::FileDescriptorSource (CallbackT callback, FileDescriptorT file_descriptor) : _file_descriptor(file_descriptor), _callback(callback)
+		FileDescriptorSource::FileDescriptorSource (CallbackT callback, FileDescriptor file_descriptor) : _file_descriptor(file_descriptor), _callback(callback)
 		{
 		}
 
@@ -159,7 +159,7 @@ namespace Dream
 			_callback(event_loop, this, events);
 		}
 
-		FileDescriptorT FileDescriptorSource::file_descriptor () const
+		FileDescriptor FileDescriptorSource::file_descriptor () const
 		{
 			return _file_descriptor;
 		}
@@ -195,7 +195,7 @@ namespace Dream
 			close(_file_descriptors[1]);
 		}
 
-		FileDescriptorT NotificationPipeSource::file_descriptor () const
+		FileDescriptor NotificationPipeSource::file_descriptor () const
 		{
 			// Read end
 			return _file_descriptors[0];

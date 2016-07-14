@@ -77,7 +77,7 @@ namespace Dream
 
 		class IFileDescriptorSource : virtual public ISource {
 		public:
-			virtual FileDescriptorT file_descriptor () const = 0;
+			virtual FileDescriptor file_descriptor () const = 0;
 
 			/// Helper functions
 			void set_will_block (bool value);
@@ -90,14 +90,14 @@ namespace Dream
 			typedef std::function<void (Loop *, FileDescriptorSource *, Event)> CallbackT;
 
 		protected:
-			FileDescriptorT _file_descriptor;
+			FileDescriptor _file_descriptor;
 			CallbackT _callback;
 
 		public:
-			FileDescriptorSource(CallbackT callback, FileDescriptorT fd);
+			FileDescriptorSource(CallbackT callback, FileDescriptor fd);
 			virtual ~FileDescriptorSource ();
 
-			virtual FileDescriptorT file_descriptor () const;
+			virtual FileDescriptor file_descriptor () const;
 
 			virtual void process_events (Loop *, Event);
 
@@ -111,7 +111,7 @@ namespace Dream
 		 */
 		class NotificationPipeSource : public Object, virtual public IFileDescriptorSource {
 		protected:
-			FileDescriptorT _file_descriptors[2];
+			FileDescriptor _file_descriptors[2];
 
 		public:
 			NotificationPipeSource ();
@@ -119,7 +119,7 @@ namespace Dream
 
 			void notify_event_loop () const;
 
-			virtual FileDescriptorT file_descriptor () const;
+			virtual FileDescriptor file_descriptor () const;
 			virtual void process_events (Loop *, Event);
 		};
 	}
