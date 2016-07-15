@@ -23,7 +23,7 @@ define_target "dream-events" do |target|
 	target.depends "Library/Dream"
 	
 	target.provides "Library/DreamEvents" do
-		append linkflags "-lDreamEvents"
+		append linkflags {install_prefix + "lib/libDreamEvents.a"}
 	end
 end
 
