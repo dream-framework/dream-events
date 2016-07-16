@@ -669,12 +669,16 @@ namespace Dream
 
 		void Loop::run_forever()
 		{
+			log_debug("-> Entering runloop:", this);
+
 			_running = true;
 			_current_thread = std::this_thread::get_id();
 
 			while (_running) {
 				run_one_iteration(true, -1);
 			}
+
+			log_debug("<- Exiting runloop:", this);
 		}
 
 		TimeT Loop::run_until_timeout (TimeT timeout)

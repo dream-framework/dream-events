@@ -51,14 +51,14 @@ namespace Dream {
 
 		void Thread::run ()
 		{
-			log_debug("Starting thread-based event-loop...");
+			log_debug("-> Starting thread-based event-loop", this);
 
 			// Lock the loop to ensure it isn't released by another thread:
 			Ref<Loop> loop = _loop;
 
 			loop->run_forever();
 
-			log_debug("Exiting thread-based event-loop...");
+			log_debug("<- Exiting thread-based event-loop", this);
 		}
 
 		void Thread::stop ()
@@ -70,108 +70,5 @@ namespace Dream {
 				_thread = NULL;
 			}
 		}
-
-// MARK: -
-// MARK: Unit Tests
-
-#ifdef ENABLE_TESTING
-
-		class TTLNote : public Object, virtual public INotificationSource {
-		public:
-			std::vector<Ref<Loop>> loops;
-			std::size_t count;
-
-			TTLNote ();
-			virtual void process_events (Loop *, Event);
-		};
-
-		TTLNote::TTLNote () : count(0)
-		{
-		}
-
-		void TTLNote::process_events(Loop * loop, Event event)
-		{
-			count += 1;
-
-			if (loops.size() > 0) {
-				Ref<Loop> next = loops.back();
-				loops.pop_back();
-
-				next->post_notification(this, true);
-			}
-		}
-
-		void add1(Ref<Queue<int>> queue)
-		{
-			queue->add(1);
-		}
-
-		UNIT_TEST(Thread) {
-			testing("Threads");
-
-			Ref<Thread> t1, t2, t3;
-
-			t1 = new Thread;
-			t2 = new Thread;
-			t3 = new Thread;
-
-			Ref<TTLNote> note = new TTLNote;
-			note->loops.push_back(t1->loop());
-			note->loops.push_back(t2->loop());
-			note->loops.push_back(t3->loop());
-
-			t1->start();
-			t2->start();
-			t3->start();
-
-			t1->loop()->post_notification(note, true);
-
-			sleep(1);
-
-			check(note->count == 4) << "Note count " << note->count << " indicates failure in notification system";
-
-			testing("Queues");
-
-			// Three threads will generate semi-random integers.
-			Ref<Queue<int>> queue = new Queue<int>();
-
-			Ref<TimerSource> e1 = new TimerSource(std::bind(add1, queue), 0.001, true);
-			Ref<TimerSource> e2 = new TimerSource(std::bind(add1, queue), 0.001, true);
-			Ref<TimerSource> e3 = new TimerSource(std::bind(add1, queue), 0.001, true);
-
-			t1->loop()->schedule_timer(e1);
-			t2->loop()->schedule_timer(e2);
-			t3->loop()->schedule_timer(e3);
-
-			queue->add(10);
-
-			/// They will be bulk processed by this loop which will fetch several items at a time.
-			int total = 0;
-			while (total < 1000) {
-				sleep(0.1);
-
-				// Fetch all items currently available.
-				std::vector<int> * items = queue->fetch();
-
-				if (items->size() == 0)
-					continue;
-
-				std::cerr << "Fetched " << items->size() << " items" << std::endl;
-
-				foreach(i, *items) {
-					total += *i;
-				}
-			}
-
-			check(total > 1000) << "Total was not incremented correctly";
-
-			t1->stop();
-			t2->stop();
-			t3->stop();
-
-			std::cerr << std::flush;
-		}
-
-#endif
 	}
 }
