@@ -213,8 +213,8 @@ namespace Dream
 					} catch (FileDescriptorClosed & ex) {
 						remove_source(s);
 					} catch (std::runtime_error & ex) {
-						log_error("Exception thrown by runloop: ", ex.what());
-						log_error("Removing file descriptor: ", s->file_descriptor());
+						log_error("Exception thrown by runloop:", ex.what());
+						log_error("Removing file descriptor:", s->file_descriptor());
 
 						remove_source(s);
 					}
@@ -344,9 +344,11 @@ namespace Dream
 
 					try {
 						_current_file_descriptor_source->process_events(loop, Event(e));
+					} catch (FileDescriptorClosed & ex) {
+						_delete_current_file_descriptor_handle = true;
 					} catch (std::runtime_error & ex) {
-						//std::cerr << "Exception thrown by runloop " << this << ": " << ex.what() << std::endl;
-						//std::cerr << "Removing file descriptor " << _current_file_descriptor_source->file_descriptor() << " ..." << std::endl;
+						log_error("Exception thrown by runloop:", ex.what());
+						log_error("Removing file descriptor:", _current_file_descriptor_source->file_descriptor());
 
 						_delete_current_file_descriptor_handle = true;
 					}
