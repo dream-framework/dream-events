@@ -15,7 +15,7 @@ define_target "dream-events" do |target|
 	end
 	
 	target.depends :platform
-	target.depends "Language/C++11"
+	target.depends "Language/C++11", private: true
 	
 	target.depends "Build/Files"
 	target.depends "Build/Clang"
@@ -34,9 +34,11 @@ define_target "dream-events-tests" do |target|
 		run tests: "DreamEvents", source_files: test_root.glob('Dream/**/*.cpp')
 	end
 	
+	target.depends "Language/C++11", private: true
+	
 	target.depends "Library/UnitTest"
 	target.depends "Library/DreamEvents"
-
+	
 	target.provides "Test/DreamEvents"
 end
 
