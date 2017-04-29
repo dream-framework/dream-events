@@ -127,7 +127,7 @@ namespace Dream
 			int result = kevent(_kqueue, change, c, NULL, 0, NULL);
 
 			if (result == -1) {
-				SystemError::check("kevent()");
+				SystemError::check("kevent");
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace Dream
 			int result = kevent(_kqueue, change, c, NULL, 0, NULL);
 
 			if (result == -1) {
-				SystemError::check("kevent()");
+				SystemError::check("kevent");
 			}
 
 			_removed_file_descriptors.insert(fd);
@@ -189,7 +189,7 @@ namespace Dream
 				count = kevent(_kqueue, NULL, 0, events, KQUEUE_SIZE, &kevent_timeout);
 
 			if (count == -1) {
-				SystemError::check("kevent()");
+				SystemError::check("kevent");
 			} else {
 				for (unsigned i = 0; i < count; i += 1) {
 					//std::cerr << this << " event[" << i << "] for fd: " << events[i].ident << " filter: " << events[i].filter << std::endl;
@@ -318,7 +318,7 @@ namespace Dream
 			}
 
 			if (result < 0) {
-				SystemError::check("poll()");
+				SystemError::check("poll");
 			}
 
 			_delete_current_file_descriptor_handle = false;
