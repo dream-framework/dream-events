@@ -10,6 +10,7 @@
 #pragma once
 
 #include <Dream/Framework.hpp>
+#include <Dream/Core/Buffer.hpp>
 #include <Dream/Core/Timer.hpp>
 
 namespace Dream
@@ -21,7 +22,7 @@ namespace Dream
 	namespace Events
 	{
 		using namespace Dream::Core;
-
+		
 		/// Event constants as used by Loop
 		enum Event {
 			READ_READY = 1,
